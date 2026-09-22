@@ -146,10 +146,10 @@ export function HeroVisual({ className }: { className?: string }) {
             </div>
 
             <div className="flex items-center justify-between gap-3 border-t border-line bg-surface-2 px-3 py-2">
-              <span className="inline-flex min-w-0 items-center gap-1.5 font-mono text-2xs text-ink-3">
+              <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-mono text-2xs text-ink-3">
                 <span className="size-1.5 shrink-0 rounded-full bg-healthy animate-ticker" aria-hidden /> Telemetry · live
               </span>
-              <svg viewBox="0 0 120 20" className="hidden h-4 w-20 shrink-0 lg:block" aria-hidden>
+              <svg viewBox="0 0 120 20" className="hidden h-4 min-w-0 flex-1 xl:block" aria-hidden>
                 <polyline points="0,14 10,12 20,13 30,9 40,11 50,7 60,8 70,5 80,9 90,6 100,4 110,7 120,5" fill="none" stroke="var(--sw-accent)" strokeWidth="1.2" vectorEffect="non-scaling-stroke" className="motion-ok:animate-draw" style={{ "--draw-length": 2000, "--draw-delay": "1200ms" } as CSSProperties} />
               </svg>
               <Meta className="whitespace-nowrap">SLA at risk · 1</Meta>
