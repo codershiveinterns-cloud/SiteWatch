@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import { ToastProvider } from "@/components/ui/toast";
-import { THEME_COOKIE, isTheme, type Theme } from "@/lib/theme";
+import { DEFAULT_THEME, THEME_COOKIE, isTheme, type Theme } from "@/lib/theme";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });
@@ -25,14 +25,14 @@ export const viewport: Viewport = {
 };
 
 /** Applies the persisted theme before first paint to avoid a flash. */
-const themeScript = `(function(){try{var m=document.cookie.match(/(?:^|; )${THEME_COOKIE}=(light|dark|system)/);var t=m?m[1]:"system";if(t==="system"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.setAttribute("data-theme",t)}catch(e){}})();`;
+const themeScript = `(function(){try{var m=document.cookie.match(/(?:^|; )${THEME_COOKIE}=(light|dark|system)/);var t=m?m[1]:"${DEFAULT_THEME}";if(t==="system"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.setAttribute("data-theme",t)}catch(e){}})();`;
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const cookieStore = await cookies();
   const raw = cookieStore.get(THEME_COOKIE)?.value;
-  const preference: Theme = isTheme(raw) ? raw : "system";
-  // Server renders a concrete theme when the user picked one; "system" is
-  // resolved on the client by the inline script before paint.
+  const preference: Theme = isTheme(raw) ? raw : DEFAULT_THEME;
+  // Light is the default. "system" (chosen explicitly) is resolved on the
+  // client by the inline script before paint.
   const initial = preference === "system" ? undefined : preference;
 
   return (
