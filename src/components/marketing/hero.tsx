@@ -7,7 +7,8 @@ import { HeroVisual } from "./hero-visual";
 export function Hero({ signedIn }: { signedIn: boolean }) {
   return (
     <section className="relative overflow-hidden pt-28 pb-14 sm:pt-32 lg:pb-20" aria-labelledby="hero-title">
-      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-[520px] bg-grid [mask-image:linear-gradient(to_bottom,black,transparent)]" />
+      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-[640px] bg-grid [mask-image:linear-gradient(to_bottom,black,transparent)]" />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-hero-glow" />
       <div className="container-m">
         <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
           <div className="max-w-xl">
@@ -19,7 +20,11 @@ export function Hero({ signedIn }: { signedIn: boolean }) {
               className="text-balance text-[2.25rem] font-semibold leading-[1.1] tracking-tight text-ink sm:text-[2.9rem] lg:text-[3.3rem] animate-rise"
               style={{ "--rise-delay": "80ms" } as React.CSSProperties}
             >
-              Know what&rsquo;s happening across every site.
+              Know what&rsquo;s happening across{" "}
+              <span className="relative inline-block">
+                every site.
+                <span aria-hidden className="absolute inset-x-0 -bottom-1 h-[3px] rounded-full bg-[linear-gradient(90deg,var(--sw-healthy),var(--sw-atrisk),var(--sw-critical))] opacity-80" />
+              </span>
             </h1>
             <p className="mt-5 max-w-lg text-pretty text-md leading-relaxed text-ink-2 animate-rise" style={{ "--rise-delay": "160ms" } as React.CSSProperties}>
               SiteWatch gives operations teams one view of distributed sites and assets: monitor health, turn alerts into

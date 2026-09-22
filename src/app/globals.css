@@ -583,3 +583,107 @@
     zoom: 1.1;
   }
 }
+
+/* ------------------------------------------------------------------------
+   Console visuals (landing page product windows)
+   --------------------------------------------------------------------- */
+@keyframes sw-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+@keyframes sw-radar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes sw-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+@utility animate-ping-ring {
+  animation: sw-ping 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+@utility animate-radar {
+  animation: sw-radar 9s linear infinite;
+}
+@utility animate-breathe {
+  animation: sw-breathe 4s ease-in-out infinite;
+}
+
+/* Dotted operations grid used behind console maps. */
+@utility bg-dots {
+  background-image: radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--sw-text) 14%, transparent) 1px, transparent 0);
+  background-size: 18px 18px;
+}
+
+/* Console window frame: hairline accent at the top, soft inner ring. */
+.console-frame {
+  position: relative;
+  box-shadow:
+    0 0 0 1px var(--sw-border),
+    0 24px 60px -24px rgba(6, 10, 18, 0.55),
+    0 12px 28px -18px rgba(6, 10, 18, 0.4);
+}
+.console-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--sw-accent) 80%, transparent), transparent);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Marker with glow and optional ping ring */
+.sw-dot {
+  position: relative;
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--marker);
+  box-shadow:
+    0 0 0 2px var(--sw-surface),
+    0 0 0 5px color-mix(in srgb, var(--marker) 22%, transparent),
+    0 0 14px color-mix(in srgb, var(--marker) 55%, transparent);
+}
+.sw-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1.5px solid var(--marker);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sw-dot[data-ping="true"]::after {
+    animation: sw-ping 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+  }
+  .sw-dot[data-ping="true"][data-delay="1"]::after {
+    animation-delay: 0.8s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sw-packet,
+  .sw-radar {
+    display: none;
+  }
+}
+
+/* Subtle radial glow behind the hero */
+@utility bg-hero-glow {
+  background:
+    radial-gradient(60% 50% at 70% 30%, color-mix(in srgb, var(--sw-accent) 10%, transparent), transparent 70%),
+    radial-gradient(40% 40% at 20% 80%, color-mix(in srgb, var(--sw-healthy) 6%, transparent), transparent 70%);
+}

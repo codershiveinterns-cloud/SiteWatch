@@ -142,7 +142,7 @@ export function Industries() {
                 <h3 className="mt-4 text-xl font-semibold tracking-tight text-ink">{active.headline}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-2">{active.body}</p>
               </div>
-              <div className="relative border-t border-line bg-sunken/60 bg-grid p-4 md:border-l md:border-t-0">
+              <div data-theme="dark" className="relative border-t border-line bg-surface bg-dots p-4 text-ink md:border-l md:border-t-0">
                 <div className="mb-3 flex items-center justify-between">
                   <Meta>{active.grid}</Meta>
                   <DemoTag />

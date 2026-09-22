@@ -54,8 +54,8 @@ export function Complexity() {
 
           {/* SiteWatch as the operational layer */}
           <Reveal delay={200}>
-            <div className="rounded-lg border border-line bg-canvas p-1 shadow-md">
-              <div className="rounded-md border border-line bg-surface">
+            <div data-theme="dark" className="console-frame rounded-xl bg-surface text-ink">
+              <div className="rounded-xl">
                 <div className="flex items-center gap-2 border-b border-line px-4 py-3">
                   <LogoMark className="size-5" />
                   <span className="text-sm font-semibold text-ink">SiteWatch</span>

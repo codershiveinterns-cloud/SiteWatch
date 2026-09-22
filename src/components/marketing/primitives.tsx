@@ -59,7 +59,7 @@ export function Window({
   meta?: React.ReactNode;
 }) {
   return (
-    <div className={cn("overflow-hidden rounded-lg border border-line bg-surface shadow-md", className)}>
+    <div data-theme="dark" className={cn("console-frame overflow-hidden rounded-xl bg-surface text-ink", className)}>
       <div className="flex h-9 min-w-0 items-center gap-2 border-b border-line bg-surface-2 px-3">
         <span aria-hidden className="flex gap-1">
           <span className="size-2 rounded-full bg-line-strong" />

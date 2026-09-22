@@ -41,8 +41,11 @@ export function MapSection() {
         </Reveal>
 
         <Reveal delay={100} className="mt-12">
-          <div className="grid grid-cols-[minmax(0,1fr)] overflow-hidden rounded-lg border border-line bg-surface shadow-lg lg:grid-cols-[minmax(0,1fr)_320px]">
-            <div className="relative aspect-[16/11] bg-sunken bg-grid sm:aspect-[16/9] lg:aspect-auto lg:min-h-[480px]">
+          <div className="console-frame grid grid-cols-[minmax(0,1fr)] overflow-hidden rounded-xl bg-surface lg:grid-cols-[minmax(0,1fr)_320px]">
+            <div className="relative aspect-[16/11] overflow-hidden bg-sunken bg-dots sm:aspect-[16/9] lg:aspect-auto lg:min-h-[480px]">
+              <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_55%_at_50%_50%,color-mix(in_srgb,var(--sw-accent)_14%,transparent),transparent_75%)]" />
+              <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(95%_95%_at_50%_50%,transparent_55%,var(--sw-sunken)_100%)]" />
+              <div aria-hidden className="sw-radar pointer-events-none absolute left-1/2 top-1/2 size-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-50 motion-ok:animate-radar [mask-image:radial-gradient(circle,black_0%,black_45%,transparent_62%)]" style={{ background: "conic-gradient(from 0deg, transparent 0deg, color-mix(in srgb, var(--sw-accent) 16%, transparent) 30deg, transparent 60deg)" }} />
               <div className="absolute left-4 top-4 z-10 flex flex-wrap items-center gap-2">
                 {["All sites", "Critical", "At risk"].map((f, i) => (
                   <span key={f} className={cn("rounded-sm border px-2 py-1 font-mono text-2xs", i === 0 ? "border-accent/50 bg-accent-soft text-accent-text" : "border-line bg-surface text-ink-3")}>
@@ -56,24 +59,30 @@ export function MapSection() {
               <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-transparent via-accent/10 to-transparent motion-ok:animate-scan" />
 
               <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full" aria-hidden>
-                <path
-                  d="M4 40 C 14 22, 34 30, 48 16 S 76 8, 88 20 S 98 48, 90 64 S 74 92, 56 94 S 26 92, 14 78 S -4 58, 4 40 Z"
-                  fill="var(--sw-surface-2)"
-                  stroke="var(--sw-border-strong)"
-                  strokeWidth="0.3"
-                  vectorEffect="non-scaling-stroke"
-                />
-                <path
-                  d="M20 50 C 30 40, 40 46, 50 36 S 70 30, 78 40 S 84 58, 74 68 S 56 82, 44 80 S 26 74, 22 64 S 14 56, 20 50 Z"
-                  fill="var(--sw-accent-soft)"
-                  fillOpacity="0.25"
-                />
+                {[
+                  "M8 40 C 18 20, 40 26, 52 14 S 82 8, 90 24 S 98 52, 88 68 S 70 94, 52 94 S 22 92, 12 76 S -2 58, 8 40 Z",
+                  "M18 44 C 26 30, 44 32, 54 24 S 78 20, 84 34 S 90 56, 80 66 S 62 84, 50 84 S 30 82, 22 70 S 10 56, 18 44 Z",
+                  "M28 48 C 34 38, 46 38, 54 34 S 72 32, 76 42 S 80 58, 72 64 S 58 74, 50 74 S 36 72, 32 64 S 22 56, 28 48 Z",
+                ].map((d, i) => (
+                  <path key={i} d={d} fill="none" stroke="var(--sw-accent)" strokeOpacity={0.18 - i * 0.04} strokeWidth="0.35" vectorEffect="non-scaling-stroke" className="motion-ok:animate-breathe" style={{ animationDelay: `${i * 900}ms` } as CSSProperties} />
+                ))}
+                <path d="M28 48 C 34 38, 46 38, 54 34 S 72 32, 76 42 S 80 58, 72 64 S 58 74, 50 74 S 36 72, 32 64 S 22 56, 28 48 Z" fill="var(--sw-accent)" fillOpacity="0.06" />
                 {[
                   [0, 1], [1, 2], [2, 7], [2, 4], [1, 3], [3, 6], [1, 5], [4, 6],
-                ].map(([a, b], i) => (
-                  <line key={i} x1={SITES[a].x} y1={SITES[a].y} x2={SITES[b].x} y2={SITES[b].y} stroke="var(--sw-border-strong)" strokeWidth="0.3" vectorEffect="non-scaling-stroke" className="motion-ok:animate-flow" style={{ animationDelay: `${i * 130}ms` }} />
-                ))}
-                <circle cx={selected.x} cy={selected.y} r="6" fill="none" stroke="var(--sw-critical)" strokeWidth="0.3" strokeDasharray="1 1" vectorEffect="non-scaling-stroke" />
+                ].map(([a, b], i) => {
+                  const id = `map-link-${i}`;
+                  return (
+                    <g key={id}>
+                      <path id={id} d={`M${SITES[a].x} ${SITES[a].y} L${SITES[b].x} ${SITES[b].y}`} fill="none" stroke="var(--sw-border-strong)" strokeWidth="0.3" strokeDasharray="1.5 2.2" vectorEffect="non-scaling-stroke" />
+                      <circle r="0.8" fill="var(--sw-accent)" className="sw-packet" style={{ filter: "drop-shadow(0 0 2px var(--sw-accent))" }}>
+                        <animateMotion dur={`${3.4 + i * 0.6}s`} repeatCount="indefinite" begin={`${i * 0.45}s`}>
+                          <mpath href={`#${id}`} />
+                        </animateMotion>
+                      </circle>
+                    </g>
+                  );
+                })}
+                <circle cx={selected.x} cy={selected.y} r="6" fill="none" stroke="var(--sw-critical)" strokeOpacity="0.6" strokeWidth="0.3" strokeDasharray="1 1" vectorEffect="non-scaling-stroke" />
               </svg>
 
               {SITES.map((s, i) => (
@@ -82,10 +91,7 @@ export function MapSection() {
                   className="m-reveal absolute -translate-x-1/2 -translate-y-1/2 motion-ok:animate-marker-in"
                   style={{ left: `${s.x}%`, top: `${s.y}%`, "--marker-delay": `${200 + i * 90}ms` } as CSSProperties}
                 >
-                  <span
-                    className={cn("block size-3 rounded-full ring-2 ring-surface", s.tone !== "healthy" && "animate-pulse-ring")}
-                    style={{ background: color[s.tone], color: color[s.tone] }}
-                  />
+                  <span className="sw-dot" style={{ "--marker": color[s.tone] } as CSSProperties} data-ping={s.tone !== "healthy"} data-delay={i % 2} />
                   <span className="absolute left-4 top-1/2 hidden -translate-y-1/2 whitespace-nowrap font-mono text-2xs text-ink-2 md:block">
                     {s.name}
                   </span>

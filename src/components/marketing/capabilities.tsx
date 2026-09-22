@@ -36,7 +36,7 @@ export function Capabilities() {
             title="Site & asset visibility"
             body="A centralized registry of sites and assets with category, GPS position, specifications and install dates. Status is derived from what the asset is actually reporting."
           >
-            <div className="overflow-hidden rounded-md border border-line">
+            <div data-theme="dark" className="console-frame overflow-hidden rounded-lg bg-surface text-ink">
               <table className="w-full text-xs">
                 <thead className="bg-surface-2 text-left">
                   <tr>
@@ -73,7 +73,7 @@ export function Capabilities() {
             title="Automated alerts"
             body="Telemetry arrives through API and webhook endpoints. Threshold and anomaly rules turn breaches into alerts with the asset already attached."
           >
-            <div className="rounded-md border border-line bg-sunken/60 p-3">
+            <div data-theme="dark" className="console-frame rounded-lg bg-surface bg-dots p-3 text-ink">
               <div className="flex items-center justify-between">
                 <Meta>CH-07 · charger_temp_c</Meta>
                 <Badge tone="atrisk">Threshold 65 °C</Badge>
@@ -99,7 +99,7 @@ export function Capabilities() {
             title="Incident management"
             body="Alerts become incidents automatically, with priority, description and linked asset. Status moves from open to closed with nothing lost between."
           >
-            <ol className="flex flex-wrap gap-1.5">
+            <ol data-theme="dark" className="console-frame flex flex-wrap gap-1.5 rounded-lg bg-surface p-3 text-ink">
               {["Open", "Assigned", "In progress", "Resolved", "Closed"].map((s, i) => (
                 <li
                   key={s}
@@ -118,7 +118,7 @@ export function Capabilities() {
             title="Field coordination"
             body="Assign technicians by location, skills and current workload, then follow their updates from the field."
           >
-            <ul className="space-y-1.5">
+            <ul data-theme="dark" className="console-frame space-y-1.5 rounded-lg bg-surface p-2.5 text-ink">
               {[
                 ["P. Nair", "4.2 km", "Inverters", "2 open"],
                 ["D. Reyes", "11 km", "Chargers", "1 open"],
@@ -143,7 +143,7 @@ export function Capabilities() {
             title="SLA tracking"
             body="Every incident carries a timer anchored to when it was created. Approaching breaches surface on the dashboard before they are missed."
           >
-            <div className="space-y-2">
+            <div data-theme="dark" className="console-frame space-y-2 rounded-lg bg-surface p-3 text-ink">
               {[
                 ["INC-1042", "Critical", 72, "critical"],
                 ["INC-1039", "High", 38, "atrisk"],
