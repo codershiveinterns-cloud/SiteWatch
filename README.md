@@ -86,8 +86,21 @@ Node, or Docker). Steps:
 6. Start: `npm start` (or the platform's Next.js runtime).
 7. Verify `GET /api/health` returns `{"status":"ok","database":"reachable"}`.
 
-On Vercel: import the repo, add the environment variables, and set the build command to
-`npx prisma migrate deploy && next build`. The `postinstall` script generates the Prisma client.
+### Vercel
+
+1. Create a PostgreSQL database (Neon, Supabase, Vercel Postgres via the Marketplace, or any
+   managed Postgres) and copy its connection string.
+2. Import the GitHub repo into Vercel. `vercel.json` already sets the build command to
+   `npm run vercel-build`, which applies migrations and then builds.
+3. In Project → Settings → Environment Variables add:
+   - `DATABASE_URL` — the connection string (required)
+   - `APP_URL` — optional; defaults to the deployment's own HTTPS URL
+   - `ALLOW_DEMO_SEED` — `true` only on preview/staging if you want demo accounts
+4. Deploy. Check `https://<your-app>.vercel.app/api/health`.
+5. Optional demo data: run locally against the production database once:
+   `DATABASE_URL="<prod url>" ALLOW_DEMO_SEED=true npx prisma db seed`.
+
+The app never needs the database at build time; only the migration step does.
 
 ## Routes
 

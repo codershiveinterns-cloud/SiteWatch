@@ -3,9 +3,9 @@ import { PrismaClient } from "@/generated/prisma/client";
 import { env } from "@/lib/env";
 
 /**
- * Prisma client singleton. In development the module is re-evaluated on hot
- * reload, so the instance is cached on `globalThis` to avoid exhausting the
- * connection pool.
+ * Prisma client singleton, created on first use rather than at import time so
+ * that `next build` (which evaluates route modules) never needs DATABASE_URL.
+ * In development the instance is cached on `globalThis` to survive hot reload.
  */
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
@@ -17,8 +17,17 @@ function createClient(): PrismaClient {
   });
 }
 
-export const db: PrismaClient = globalForPrisma.prisma ?? createClient();
-
-if (env().NODE_ENV !== "production") {
-  globalForPrisma.prisma = db;
+function getClient(): PrismaClient {
+  if (!globalForPrisma.prisma) {
+    globalForPrisma.prisma = createClient();
+  }
+  return globalForPrisma.prisma;
 }
+
+export const db: PrismaClient = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    const client = getClient();
+    const value = Reflect.get(client, prop, client);
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+});
