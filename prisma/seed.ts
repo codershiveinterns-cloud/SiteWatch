@@ -7,7 +7,7 @@
  */
 import "dotenv/config";
 import bcrypt from "bcryptjs";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { Role } from "../src/generated/prisma/enums";
 
@@ -16,7 +16,9 @@ if (process.env.ALLOW_DEMO_SEED !== "true") {
   process.exit(1);
 }
 
-const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
+const db = new PrismaClient({
+  adapter: new PrismaBetterSqlite3({ url: (process.env.DATABASE_URL || "file:./prisma/sitewatch.db").replace(/^file:/, "") }),
+});
 
 export const DEMO_PASSWORD = "SiteWatch-Demo1";
 

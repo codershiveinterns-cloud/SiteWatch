@@ -17,20 +17,19 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the technical design.
 | Framework | Next.js 16 (App Router, React 19, Server Components + Server Actions) |
 | Language | TypeScript (strict) |
 | Styling | Tailwind CSS v4 with a custom SiteWatch token set (light + dark) |
-| Database | PostgreSQL via Prisma 7 (`@prisma/adapter-pg`) |
+| Database | SQLite file via Prisma 7 (`@prisma/adapter-better-sqlite3`); swap to Postgres when needed |
 | Auth | Email/password, bcrypt hashing, server-side sessions in httpOnly cookies |
 | Validation | Zod (shared between client forms and server actions) |
 | UI primitives | Radix UI (dialog, dropdown, tooltip) + Lucide icons |
 
 ## Local development
 
-Prerequisites: Node 20+, PostgreSQL 14+.
+Prerequisites: Node 20+. No database server is needed; data lives in a local SQLite file.
 
 ```bash
-cp .env.example .env          # then set DATABASE_URL
+cp .env.example .env
 npm install
-npx prisma migrate deploy     # apply migrations
-npx prisma db seed            # optional demo tenants (ALLOW_DEMO_SEED=true)
+npm run db:setup              # creates prisma/sitewatch.db, applies migrations, seeds demo tenants
 npm run dev
 ```
 
@@ -68,39 +67,36 @@ See [.env.example](./.env.example).
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `DATABASE_URL` | yes | PostgreSQL connection string |
+| `DATABASE_URL` | no | SQLite file URL, default `file:./prisma/sitewatch.db` |
 | `APP_URL` | yes | Public origin (`https://…` enables the `Secure` cookie flag) |
 | `SESSION_TTL_DAYS` | no | Session lifetime, default 30 |
 | `ALLOW_DEMO_SEED` | no | `"true"` permits `prisma db seed`; never set on production |
 
-## Staging deployment
+## Deployment
 
-The app is a standard Next.js server deployment (Vercel, Railway, Render, Fly, a VPS with
-Node, or Docker). Steps:
+### Vercel (no external database)
+
+Import the GitHub repo into Vercel and deploy. Nothing else is required: `vercel.json`
+runs `npm run vercel-build`, which creates the SQLite file, applies migrations, seeds the demo
+organizations and builds. The database file ships inside the deployment.
+
+**Important:** Vercel's filesystem is temporary. Accounts and changes made on the deployed site
+persist only until the serverless instance is recycled (typically minutes to hours of
+inactivity). The seeded demo accounts are always available. For durable storage, move to a
+managed database:
 
 1. Provision PostgreSQL and set `DATABASE_URL`.
-2. Set `APP_URL` to the public HTTPS origin.
-3. Build: `npm ci && npm run build`.
-4. Apply migrations: `npx prisma migrate deploy` (run once per release, before starting the app).
-5. Optionally seed demo tenants for client review: `ALLOW_DEMO_SEED=true npx prisma db seed`.
-6. Start: `npm start` (or the platform's Next.js runtime).
-7. Verify `GET /api/health` returns `{"status":"ok","database":"reachable"}`.
+2. In `prisma/schema.prisma` set `provider = "postgresql"`, install `@prisma/adapter-pg` and
+   `pg`, and swap the adapter in `src/lib/db.ts` and `prisma/seed.ts`.
+3. Run `npx prisma migrate dev --name init` to create Postgres migrations.
 
-### Vercel
+### Any Node host / VPS
 
-1. Create a PostgreSQL database (Neon, Supabase, Vercel Postgres via the Marketplace, or any
-   managed Postgres) and copy its connection string.
-2. Import the GitHub repo into Vercel. `vercel.json` already sets the build command to
-   `npm run vercel-build`, which applies migrations and then builds.
-3. In Project → Settings → Environment Variables add:
-   - `DATABASE_URL` — the connection string (required)
-   - `APP_URL` — optional; defaults to the deployment's own HTTPS URL
-   - `ALLOW_DEMO_SEED` — `true` only on preview/staging if you want demo accounts
-4. Deploy. Check `https://<your-app>.vercel.app/api/health`.
-5. Optional demo data: run locally against the production database once:
-   `DATABASE_URL="<prod url>" ALLOW_DEMO_SEED=true npx prisma db seed`.
+```bash
+npm ci && npm run db:setup && npm run build && npm start
+```
 
-The app never needs the database at build time; only the migration step does.
+Keep `prisma/sitewatch.db` on a persistent disk and back it up.
 
 ## Routes
 

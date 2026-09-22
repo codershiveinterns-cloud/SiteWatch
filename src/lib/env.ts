@@ -7,10 +7,8 @@ import { z } from "zod";
 const blankToUndefined = (v: unknown) => (typeof v === "string" && v.trim() === "" ? undefined : v);
 
 const envSchema = z.object({
-  DATABASE_URL: z.preprocess(
-    blankToUndefined,
-    z.string({ message: "DATABASE_URL is required" }).url({ message: "DATABASE_URL must be a valid PostgreSQL URL" }),
-  ),
+  /** SQLite file URL, e.g. `file:./prisma/sitewatch.db`. */
+  DATABASE_URL: z.preprocess(blankToUndefined, z.string().startsWith("file:").default("file:./prisma/sitewatch.db")),
   APP_URL: z.preprocess(blankToUndefined, z.string().url().optional()),
   SESSION_TTL_DAYS: z.preprocess(
     (v) => (blankToUndefined(v) === undefined ? 30 : Number(v)),
