@@ -26,7 +26,7 @@ export function Hero({ signedIn }: { signedIn: boolean }) {
               incidents, and coordinate field response without the spreadsheets and phone chains.
             </p>
             <div className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:items-center animate-rise" style={{ "--rise-delay": "240ms" } as React.CSSProperties}>
-              <Button asChild size="lg" className="sm:min-w-36">
+              <Button asChild size="lg" className="link-arrow sm:min-w-36">
                 <Link href={signedIn ? "/dashboard" : "/signup"}>
                   {signedIn ? "Open console" : "Get started"} <ArrowRight className="size-4" aria-hidden />
                 </Link>

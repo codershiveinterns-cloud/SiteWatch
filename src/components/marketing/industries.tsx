@@ -121,7 +121,7 @@ export function Industries() {
                     aria-controls="industry-panel"
                     onClick={() => setActive(ind)}
                     className={cn(
-                      "flex h-11 shrink-0 items-center gap-2.5 rounded-md border px-3 text-sm font-medium transition-colors",
+                      "flex h-11 shrink-0 items-center gap-2.5 rounded-md border px-3 text-sm font-medium transition-[background-color,border-color,color,box-shadow] duration-200",
                       selected ? "border-line-strong bg-surface text-ink shadow-sm" : "border-transparent text-ink-2 hover:bg-sunken hover:text-ink",
                     )}
                   >
@@ -135,7 +135,7 @@ export function Industries() {
 
           <Reveal delay={80}>
             <div id="industry-panel" role="tabpanel" className="grid grid-cols-[minmax(0,1fr)] overflow-hidden rounded-lg border border-line bg-surface shadow-sm md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-              <div className="p-6 lg:p-8">
+              <div key={active.key} className="p-6 motion-ok:animate-fade-in lg:p-8">
                 <span className="inline-flex size-9 items-center justify-center rounded-md border border-line bg-surface-2 text-accent">
                   <Icon className="size-4" aria-hidden />
                 </span>

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { cn } from "@/lib/utils";
 import { StatusDot, type StatusTone } from "@/components/ui/status-indicator";
 import { Reveal } from "./reveal";
@@ -30,9 +31,10 @@ export function IncidentTimeline() {
 
           <Reveal delay={100}>
             <ol className="relative border-l border-line-strong/60 pl-6 sm:pl-8">
+              <span aria-hidden className="m-reveal absolute -left-px top-0 bottom-0 w-px bg-accent/50 motion-ok:animate-line-grow" style={{ animationDuration: "2200ms" }} />
               {STEPS.map((s, i) => (
-                <li key={s.label} className={cn("relative pb-8 last:pb-0")}>
-                  <span className="absolute -left-[31px] top-1 flex size-4 items-center justify-center rounded-full bg-surface ring-1 ring-line-strong sm:-left-[39px]">
+                <li key={s.label} className={cn("m-reveal relative pb-8 last:pb-0 motion-ok:animate-rise")} style={{ "--rise-delay": `${i * 320}ms` } as React.CSSProperties}>
+                  <span className="m-reveal absolute -left-[31px] top-1 flex size-4 items-center justify-center rounded-full bg-surface ring-1 ring-line-strong motion-ok:animate-marker-in sm:-left-[39px]" style={{ "--marker-delay": `${i * 320 + 150}ms` } as React.CSSProperties}>
                     <StatusDot tone={s.tone} pulse={i === 0} />
                   </span>
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Reveal } from "./reveal";
 import { Meta, SectionHeading } from "./primitives";
 import { RoleBadge } from "@/components/ui/badge";
@@ -27,8 +28,8 @@ export function Security() {
         <div className="mt-12 grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
           <Reveal>
             <dl className="grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2">
-              {POINTS.map((p) => (
-                <div key={p.title} className="bg-surface p-5">
+              {POINTS.map((p, i) => (
+                <div key={p.title} className="m-reveal bg-surface p-5 motion-ok:animate-rise" style={{ "--rise-delay": `${i * 80}ms` } as React.CSSProperties}>
                   <dt className="text-sm font-semibold text-ink">{p.title}</dt>
                   <dd className="mt-1.5 text-sm leading-relaxed text-ink-2">{p.body}</dd>
                 </div>

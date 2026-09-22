@@ -434,3 +434,145 @@
 @utility animate-ticker {
   animation: sw-ticker 2.4s ease-in-out infinite;
 }
+
+/* ------------------------------------------------------------------------
+   Landing page motion, phase 2
+   Animations inside a [data-reveal] wrapper stay paused until the wrapper
+   scrolls into view, so charts draw and bars grow when they are seen.
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+[data-reveal=""] .m-reveal,
+[data-reveal=""].m-reveal {
+  animation-play-state: paused !important;
+}
+[data-reveal="visible"] .m-reveal,
+[data-reveal="visible"].m-reveal {
+  animation-play-state: running;
+}
+
+@keyframes sw-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+@keyframes sw-grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes sw-scan {
+  0% {
+    transform: translateY(-10%);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110%);
+    opacity: 0;
+  }
+}
+@keyframes sw-slide-down-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+    background-color: var(--sw-accent-soft);
+  }
+  60% {
+    background-color: var(--sw-accent-soft);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    background-color: transparent;
+  }
+}
+@keyframes sw-glow-step {
+  0%,
+  100% {
+    border-color: var(--sw-border);
+    color: var(--sw-text-3);
+    background: transparent;
+  }
+  50% {
+    border-color: color-mix(in srgb, var(--sw-accent) 40%, transparent);
+    color: var(--sw-accent-text);
+    background: var(--sw-accent-soft);
+  }
+}
+@keyframes sw-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 28px 28px;
+  }
+}
+@keyframes sw-line-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@utility animate-flow {
+  stroke-dasharray: 3 5;
+  animation: sw-flow 1.2s linear infinite;
+}
+@utility animate-grow-x {
+  animation: sw-grow-x 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--bar-delay, 0ms);
+  transform-origin: left;
+}
+@utility animate-scan {
+  animation: sw-scan 7s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation-delay: 1.5s;
+}
+@utility animate-slide-down-in {
+  animation: sw-slide-down-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@utility animate-glow-step {
+  animation: sw-glow-step 6s ease-in-out infinite;
+  animation-delay: var(--step-delay, 0ms);
+}
+@utility animate-drift {
+  animation: sw-drift 12s linear infinite;
+}
+@utility animate-line-grow {
+  animation: sw-line-grow 1400ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transform-origin: top;
+}
+
+/* Hover affordances */
+.link-arrow svg {
+  transition: transform 180ms ease;
+}
+.link-arrow:hover svg {
+  transform: translateX(3px);
+}
+.card-lift {
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sw-shadow-md);
+    border-color: var(--sw-border-strong);
+  }
+}

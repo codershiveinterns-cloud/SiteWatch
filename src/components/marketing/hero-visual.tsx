@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 import { StatusDot, type StatusTone } from "@/components/ui/status-indicator";
 import { DemoTag, Meta, Window } from "./primitives";
+import { LiveAlerts } from "./live-alerts";
 
 type Site = { id: string; x: number; y: number; tone: StatusTone; label: string };
 
@@ -13,12 +14,6 @@ const SITES: Site[] = [
   { id: "S-05", x: 82, y: 38, tone: "healthy", label: "Tower N-9" },
   { id: "S-06", x: 44, y: 82, tone: "healthy", label: "Site yard 3" },
   { id: "S-07", x: 88, y: 76, tone: "healthy", label: "Solar array B" },
-];
-
-const ALERTS: Array<{ tone: StatusTone; title: string; site: string; age: string }> = [
-  { tone: "critical", title: "Inverter offline", site: "Warehouse C · INV-2", age: "2m" },
-  { tone: "atrisk", title: "Charger temp above threshold", site: "EV hub 12 · CH-07", age: "11m" },
-  { tone: "atrisk", title: "Battery SoC trending low", site: "Tower N-4 · BAT-1", age: "38m" },
 ];
 
 const fill: Record<StatusTone, string> = {
@@ -84,11 +79,17 @@ export function HeroVisual({ className }: { className?: string }) {
                 stroke="var(--sw-border-strong)"
                 strokeWidth="0.3"
                 vectorEffect="non-scaling-stroke"
-                className="motion-ok:animate-draw"
-                style={{ "--draw-length": 2000, "--draw-delay": `${400 + i * 120}ms` } as CSSProperties}
+                className="motion-ok:animate-flow"
+                style={{ animationDelay: `${i * 150}ms` } as CSSProperties}
               />
             ))}
           </svg>
+
+          {/* Scan sweep */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-transparent via-accent/10 to-transparent motion-ok:animate-scan"
+          />
 
           {SITES.map((s, i) => (
             <div
@@ -117,26 +118,7 @@ export function HeroVisual({ className }: { className?: string }) {
 
         {/* Side panel */}
         <div className="flex flex-col">
-          <div className="flex items-center justify-between border-b border-line px-3 py-2">
-            <span className="text-xs font-semibold text-ink">Open alerts</span>
-            <Meta>3 active</Meta>
-          </div>
-          <ul className="divide-y divide-line">
-            {ALERTS.map((a, i) => (
-              <li
-                key={a.title}
-                className="flex items-start gap-2.5 px-3 py-2.5 motion-ok:animate-rise"
-                style={{ "--rise-delay": `${900 + i * 140}ms` } as CSSProperties}
-              >
-                <StatusDot tone={a.tone} className="mt-1.5" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-medium text-ink">{a.title}</p>
-                  <p className="truncate font-mono text-2xs text-ink-3">{a.site}</p>
-                </div>
-                <span className="font-mono text-2xs text-ink-3 tabular">{a.age}</span>
-              </li>
-            ))}
-          </ul>
+          <LiveAlerts />
 
           <div className="mt-auto border-t border-line px-3 py-3">
             <div className="mb-2 flex items-center justify-between">
@@ -144,9 +126,9 @@ export function HeroVisual({ className }: { className?: string }) {
               <Meta>41 assets</Meta>
             </div>
             <div className="flex h-2 overflow-hidden rounded-sm bg-sunken" role="img" aria-label="Asset health: mostly healthy, a few at risk, one critical">
-              <span className="w-[82%] bg-healthy" />
-              <span className="w-[13%] bg-atrisk" />
-              <span className="w-[5%] bg-critical" />
+              <span className="w-[82%] bg-healthy motion-ok:animate-grow-x" style={{ "--bar-delay": "1100ms" } as CSSProperties} />
+              <span className="w-[13%] bg-atrisk motion-ok:animate-grow-x" style={{ "--bar-delay": "1300ms" } as CSSProperties} />
+              <span className="w-[5%] bg-critical motion-ok:animate-grow-x" style={{ "--bar-delay": "1450ms" } as CSSProperties} />
             </div>
             <div className="mt-2 grid grid-cols-3 gap-2 text-2xs text-ink-2">
               <span className="inline-flex items-center gap-1.5"><StatusDot tone="healthy" /> 34 healthy</span>

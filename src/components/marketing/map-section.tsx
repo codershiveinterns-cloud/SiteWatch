@@ -4,6 +4,7 @@ import { StatusDot, type StatusTone } from "@/components/ui/status-indicator";
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "./reveal";
 import { DemoTag, Meta, SectionHeading } from "./primitives";
+import { CountUp } from "./count-up";
 
 const SITES: Array<{ id: string; name: string; x: number; y: number; tone: StatusTone; assets: number; open: number }> = [
   { id: "S-01", name: "Solar array A", x: 14, y: 36, tone: "healthy", assets: 9, open: 0 },
@@ -52,6 +53,7 @@ export function MapSection() {
               <div className="absolute right-4 top-4 z-10">
                 <DemoTag />
               </div>
+              <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-transparent via-accent/10 to-transparent motion-ok:animate-scan" />
 
               <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full" aria-hidden>
                 <path
@@ -69,7 +71,7 @@ export function MapSection() {
                 {[
                   [0, 1], [1, 2], [2, 7], [2, 4], [1, 3], [3, 6], [1, 5], [4, 6],
                 ].map(([a, b], i) => (
-                  <line key={i} x1={SITES[a].x} y1={SITES[a].y} x2={SITES[b].x} y2={SITES[b].y} stroke="var(--sw-border-strong)" strokeWidth="0.3" strokeDasharray="1 1.4" vectorEffect="non-scaling-stroke" />
+                  <line key={i} x1={SITES[a].x} y1={SITES[a].y} x2={SITES[b].x} y2={SITES[b].y} stroke="var(--sw-border-strong)" strokeWidth="0.3" vectorEffect="non-scaling-stroke" className="motion-ok:animate-flow" style={{ animationDelay: `${i * 130}ms` }} />
                 ))}
                 <circle cx={selected.x} cy={selected.y} r="6" fill="none" stroke="var(--sw-critical)" strokeWidth="0.3" strokeDasharray="1 1" vectorEffect="non-scaling-stroke" />
               </svg>
@@ -77,8 +79,8 @@ export function MapSection() {
               {SITES.map((s, i) => (
                 <div
                   key={s.id}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 motion-ok:animate-marker-in"
-                  style={{ left: `${s.x}%`, top: `${s.y}%`, "--marker-delay": `${i * 70}ms` } as CSSProperties}
+                  className="m-reveal absolute -translate-x-1/2 -translate-y-1/2 motion-ok:animate-marker-in"
+                  style={{ left: `${s.x}%`, top: `${s.y}%`, "--marker-delay": `${200 + i * 90}ms` } as CSSProperties}
                 >
                   <span
                     className={cn("block size-3 rounded-full ring-2 ring-surface", s.tone !== "healthy" && "animate-pulse-ring")}
@@ -110,16 +112,18 @@ export function MapSection() {
                 <p className="font-mono text-2xs text-ink-3">52.63 / -1.13 · Warehouse</p>
               </div>
               <dl className="grid grid-cols-3 divide-x divide-line border-b border-line">
-                {[
-                  ["Assets", String(selected.assets)],
-                  ["Open", String(selected.open)],
-                  ["SLA", "1h 12m"],
-                ].map(([k, v]) => (
-                  <div key={k} className="px-4 py-2.5">
-                    <dt className="font-mono text-2xs uppercase tracking-wider text-ink-3">{k}</dt>
-                    <dd className="text-sm font-semibold text-ink tabular">{v}</dd>
-                  </div>
-                ))}
+                <div className="px-4 py-2.5">
+                  <dt className="font-mono text-2xs uppercase tracking-wider text-ink-3">Assets</dt>
+                  <dd className="text-sm font-semibold text-ink tabular"><CountUp value={selected.assets} duration={900} /></dd>
+                </div>
+                <div className="px-4 py-2.5">
+                  <dt className="font-mono text-2xs uppercase tracking-wider text-ink-3">Open</dt>
+                  <dd className="text-sm font-semibold text-ink tabular"><CountUp value={selected.open} duration={900} /></dd>
+                </div>
+                <div className="px-4 py-2.5">
+                  <dt className="font-mono text-2xs uppercase tracking-wider text-ink-3">SLA</dt>
+                  <dd className="text-sm font-semibold text-ink tabular">1h 12m</dd>
+                </div>
               </dl>
               <div className="px-4 py-3">
                 <Meta>Assets</Meta>
@@ -129,8 +133,8 @@ export function MapSection() {
                     ["HVAC-2", "HVAC zone 2", "healthy", "4.1 °C"],
                     ["UPS-1", "UPS", "healthy", "100%"],
                     ["DOOR-7", "Dock door 7", "healthy", "Closed"],
-                  ].map(([id, n, t, m]) => (
-                    <li key={id} className="flex items-center gap-2.5 text-xs">
+                  ].map(([id, n, t, m], i) => (
+                    <li key={id} className="m-reveal flex items-center gap-2.5 text-xs motion-ok:animate-rise" style={{ "--rise-delay": `${600 + i * 110}ms` } as CSSProperties}>
                       <StatusDot tone={t as StatusTone} />
                       <span className="w-12 font-mono text-2xs text-ink-3">{id}</span>
                       <span className="flex-1 truncate text-ink">{n}</span>

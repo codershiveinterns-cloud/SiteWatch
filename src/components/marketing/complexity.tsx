@@ -1,3 +1,4 @@
+import * as React from "react";
 import { FileSpreadsheet, Mail, MonitorDot, Phone, Route, Users } from "lucide-react";
 import { LogoMark } from "@/components/ui/logo";
 import { Reveal } from "./reveal";
@@ -28,8 +29,12 @@ export function Complexity() {
         <div className="mt-12 grid grid-cols-[minmax(0,1fr)] items-center gap-8 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-6">
           {/* Fragmented sources */}
           <Reveal className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2">
-            {SOURCES.map(({ icon: Icon, label, detail }) => (
-              <div key={label} className="rounded-md border border-dashed border-line-strong/70 bg-canvas px-3 py-3">
+            {SOURCES.map(({ icon: Icon, label, detail }, i) => (
+              <div
+                key={label}
+                className="m-reveal rounded-md border border-dashed border-line-strong/70 bg-canvas px-3 py-3 motion-ok:animate-rise"
+                style={{ "--rise-delay": `${i * 70}ms` } as React.CSSProperties}
+              >
                 <Icon className="size-4 text-ink-3" aria-hidden />
                 <p className="mt-2 text-sm font-medium text-ink">{label}</p>
                 <p className="mt-0.5 text-xs text-ink-3">{detail}</p>
@@ -41,9 +46,9 @@ export function Complexity() {
           <Reveal delay={120} className="flex items-center justify-center lg:flex-col">
             <svg viewBox="0 0 120 60" className="h-10 w-28 rotate-90 text-line-strong lg:h-16 lg:w-32 lg:rotate-0" aria-hidden>
               {[8, 20, 32, 44, 52].map((y, i) => (
-                <path key={i} d={`M0 ${y} C 50 ${y}, 60 30, 118 30`} fill="none" stroke="currentColor" strokeWidth="1" />
+                <path key={i} d={`M0 ${y} C 50 ${y}, 60 30, 118 30`} fill="none" stroke="currentColor" strokeWidth="1" className="m-reveal motion-ok:animate-flow" style={{ animationDelay: `${i * 120}ms` }} />
               ))}
-              <circle cx="118" cy="30" r="2.5" fill="var(--sw-accent)" />
+              <circle cx="118" cy="30" r="2.5" fill="var(--sw-accent)" className="m-reveal animate-pulse-ring" style={{ color: "var(--sw-accent)" }} />
             </svg>
           </Reveal>
 
@@ -62,8 +67,12 @@ export function Complexity() {
                     ["Signals", "Telemetry and alerts evaluated in one place"],
                     ["Work", "Incidents, assignments and SLA timers"],
                     ["Field", "Technicians update from where they stand"],
-                  ].map(([k, v]) => (
-                    <li key={k} className="grid grid-cols-[5.5rem_1fr] gap-3 px-4 py-2.5">
+                  ].map(([k, v], i) => (
+                    <li
+                      key={k}
+                      className="m-reveal grid grid-cols-[5.5rem_1fr] gap-3 px-4 py-2.5 motion-ok:animate-rise"
+                      style={{ "--rise-delay": `${300 + i * 110}ms` } as React.CSSProperties}
+                    >
                       <span className="font-mono text-2xs uppercase tracking-wider text-accent-text">{k}</span>
                       <span className="text-sm text-ink-2">{v}</span>
                     </li>

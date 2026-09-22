@@ -1,3 +1,4 @@
+import * as React from "react";
 import { ListOrdered, Radar, UserCheck, Waves } from "lucide-react";
 import { Reveal } from "./reveal";
 import { SectionHeading } from "./primitives";
@@ -24,8 +25,8 @@ export function AiSection() {
           </Reveal>
           <Reveal delay={100}>
             <ul className="grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2">
-              {ITEMS.map(({ icon: Icon, title, body }) => (
-                <li key={title} className="bg-canvas p-5">
+              {ITEMS.map(({ icon: Icon, title, body }, i) => (
+                <li key={title} className="m-reveal bg-canvas p-5 motion-ok:animate-rise" style={{ "--rise-delay": `${i * 100}ms` } as React.CSSProperties}>
                   <Icon className="size-4 text-accent" aria-hidden />
                   <h3 className="mt-3 text-sm font-semibold text-ink">{title}</h3>
                   <p className="mt-1.5 text-sm leading-relaxed text-ink-2">{body}</p>

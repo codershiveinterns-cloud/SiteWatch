@@ -7,7 +7,7 @@ import { Meta, SectionHeading } from "./primitives";
 
 function Card({ title, body, children, className, delay = 0 }: { title: string; body: string; children?: React.ReactNode; className?: string; delay?: number }) {
   return (
-    <Reveal as="article" delay={delay} className={cn("flex flex-col rounded-lg border border-line bg-surface shadow-sm", className)}>
+    <Reveal as="article" delay={delay} className={cn("card-lift flex flex-col rounded-lg border border-line bg-surface shadow-sm", className)}>
       <div className="px-5 pt-5">
         <h3 className="text-md font-semibold text-ink">{title}</h3>
         <p className="mt-1.5 text-sm leading-relaxed text-ink-2">{body}</p>
@@ -85,10 +85,10 @@ export function Capabilities() {
                   fill="none"
                   stroke="var(--sw-accent)"
                   strokeWidth="1.5"
-                  className="motion-ok:animate-draw"
+                  className="m-reveal motion-ok:animate-draw"
                   style={{ "--draw-length": 2000 } as CSSProperties}
                 />
-                <circle cx="262" cy="24" r="3" fill="var(--sw-atrisk)" />
+                <circle cx="262" cy="24" r="3" fill="var(--sw-atrisk)" className="m-reveal animate-pulse-ring motion-ok:animate-marker-in" style={{ color: "var(--sw-atrisk)", "--marker-delay": "1500ms" } as CSSProperties} />
               </svg>
               <p className="mt-1 font-mono text-2xs text-ink-3">Alert raised at 65.4 °C · rule: charger_temp &gt; 65 for 5 min</p>
             </div>
@@ -101,7 +101,11 @@ export function Capabilities() {
           >
             <ol className="flex flex-wrap gap-1.5">
               {["Open", "Assigned", "In progress", "Resolved", "Closed"].map((s, i) => (
-                <li key={s} className={cn("rounded-sm border px-2 py-1 font-mono text-2xs", i <= 1 ? "border-accent/40 bg-accent-soft text-accent-text" : "border-line text-ink-3")}>
+                <li
+                  key={s}
+                  className="m-reveal rounded-sm border border-line px-2 py-1 font-mono text-2xs text-ink-3 motion-ok:animate-glow-step"
+                  style={{ "--step-delay": `${i * 1200}ms` } as CSSProperties}
+                >
                   {s}
                 </li>
               ))}
@@ -120,7 +124,11 @@ export function Capabilities() {
                 ["D. Reyes", "11 km", "Chargers", "1 open"],
                 ["J. Osei", "27 km", "Towers", "0 open"],
               ].map(([n, d, s, l], i) => (
-                <li key={n} className={cn("grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-sm border px-2.5 py-1.5 text-xs", i === 0 ? "border-accent/40 bg-accent-soft/60" : "border-line")}>
+                <li
+                  key={n}
+                  className={cn("m-reveal grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-sm border px-2.5 py-1.5 text-xs motion-ok:animate-rise", i === 0 ? "border-accent/40 bg-accent-soft/60" : "border-line")}
+                  style={{ "--rise-delay": `${200 + i * 140}ms` } as CSSProperties}
+                >
                   <span className="font-medium text-ink">{n}</span>
                   <span className="font-mono text-2xs text-ink-3">{d} · {s}</span>
                   <span className="font-mono text-2xs text-ink-3">{l}</span>
@@ -147,7 +155,10 @@ export function Capabilities() {
                     <span>{pct}% elapsed</span>
                   </div>
                   <div className="mt-1 h-1.5 overflow-hidden rounded-sm bg-sunken">
-                    <div className={cn("h-full rounded-sm", tone === "critical" ? "bg-critical" : tone === "atrisk" ? "bg-atrisk" : "bg-healthy")} style={{ width: `${pct}%` }} />
+                    <div
+                      className={cn("m-reveal h-full rounded-sm motion-ok:animate-grow-x", tone === "critical" ? "bg-critical" : tone === "atrisk" ? "bg-atrisk" : "bg-healthy")}
+                      style={{ width: `${pct}%`, "--bar-delay": "200ms" } as CSSProperties}
+                    />
                   </div>
                 </div>
               ))}

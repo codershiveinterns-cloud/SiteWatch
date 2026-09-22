@@ -27,6 +27,27 @@ export function SiteNav({ signedIn }: { signedIn: boolean }) {
     () => false,
   );
   const [open, setOpen] = React.useState(false);
+  const [active, setActive] = React.useState<string | null>(null);
+
+  // Highlight the nav item for the section currently in view.
+  React.useEffect(() => {
+    const sections = LINKS.map((l) => document.getElementById(l.href.slice(1))).filter((el): el is HTMLElement => Boolean(el));
+    if (sections.length === 0 || typeof IntersectionObserver === "undefined") return;
+    const inView = new Set<string>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) inView.add(e.target.id);
+          else inView.delete(e.target.id);
+        }
+        const first = LINKS.find((l) => inView.has(l.href.slice(1)));
+        setActive(first ? first.href : null);
+      },
+      { rootMargin: "-40% 0px -50% 0px", threshold: 0 },
+    );
+    sections.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
 
   return (
     <header
@@ -46,9 +67,20 @@ export function SiteNav({ signedIn }: { signedIn: boolean }) {
               <li key={l.href}>
                 <a
                   href={l.href}
-                  className="flex h-9 items-center rounded-md px-3 text-sm font-medium text-ink-2 transition-colors hover:bg-sunken hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  aria-current={active === l.href ? "location" : undefined}
+                  className={cn(
+                    "relative flex h-9 items-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-sunken hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+                    active === l.href ? "text-ink" : "text-ink-2",
+                  )}
                 >
                   {l.label}
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-accent transition-[transform,opacity] duration-200 origin-left",
+                      active === l.href ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0",
+                    )}
+                  />
                 </a>
               </li>
             ))}

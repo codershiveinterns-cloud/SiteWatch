@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { Reveal } from "./reveal";
 import { DemoTag, Meta, SectionHeading, Window } from "./primitives";
+import { CountUp } from "./count-up";
 
 const UPTIME = [99.2, 99.6, 98.1, 99.8, 99.4, 99.9, 97.6, 99.7];
 const ALERTS = [12, 9, 15, 7, 11, 6, 14, 8, 5, 9, 4, 7];
@@ -12,7 +13,7 @@ function Sparkline({ values, stroke }: { values: number[]; stroke: string }) {
   const pts = values.map((v, i) => `${(i / (values.length - 1)) * 100},${40 - ((v - min) / (max - min || 1)) * 34 - 3}`).join(" ");
   return (
     <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="h-12 w-full" aria-hidden>
-      <polyline points={pts} fill="none" stroke={stroke} strokeWidth="1.6" vectorEffect="non-scaling-stroke" className="motion-ok:animate-draw" style={{ "--draw-length": 2000 } as CSSProperties} />
+      <polyline points={pts} fill="none" stroke={stroke} strokeWidth="1.6" vectorEffect="non-scaling-stroke" className="m-reveal motion-ok:animate-draw" style={{ "--draw-length": 2000 } as CSSProperties} />
     </svg>
   );
 }
@@ -34,24 +35,24 @@ export function Analytics() {
           <Window title="sitewatch · analytics · last 8 weeks" meta={<DemoTag />} bodyClassName="grid gap-px bg-line md:grid-cols-2 lg:grid-cols-4">
             <div className="bg-surface p-4">
               <Meta>Uptime · all sites</Meta>
-              <p className="mt-1 text-xl font-semibold text-ink tabular">99.4%</p>
+              <p className="mt-1 text-xl font-semibold text-ink tabular"><CountUp value={99.4} decimals={1} suffix="%" /></p>
               <Sparkline values={UPTIME} stroke="var(--sw-healthy)" />
               <p className="font-mono text-2xs text-ink-3">Weekly · target 99.5%</p>
             </div>
             <div className="bg-surface p-4">
               <Meta>Mean time to resolve</Meta>
-              <p className="mt-1 text-xl font-semibold text-ink tabular">2.2 h</p>
+              <p className="mt-1 text-xl font-semibold text-ink tabular"><CountUp value={2.2} decimals={1} suffix=" h" /></p>
               <Sparkline values={MTTR.map((v) => -v)} stroke="var(--sw-accent)" />
               <p className="font-mono text-2xs text-ink-3">Weekly · trending down</p>
             </div>
             <div className="bg-surface p-4">
               <Meta>Alert volume</Meta>
-              <p className="mt-1 text-xl font-semibold text-ink tabular">107</p>
+              <p className="mt-1 text-xl font-semibold text-ink tabular"><CountUp value={107} /></p>
               <div className="mt-2 flex h-12 items-end gap-1" role="img" aria-label="Weekly alert counts">
                 {ALERTS.map((v, i) => (
                   <span
                     key={i}
-                    className="flex-1 rounded-t-[2px] bg-atrisk/80 motion-ok:animate-bar-grow"
+                    className="m-reveal flex-1 rounded-t-[2px] bg-atrisk/80 motion-ok:animate-bar-grow"
                     style={{ height: `${(v / 15) * 100}%`, "--bar-delay": `${i * 50}ms` } as CSSProperties}
                   />
                 ))}
@@ -72,7 +73,7 @@ export function Analytics() {
                       <span className="font-mono text-2xs text-ink-3 tabular">{pct}% in SLA</span>
                     </div>
                     <div className="mt-1 h-1.5 overflow-hidden rounded-sm bg-sunken">
-                      <div className="h-full rounded-sm bg-accent motion-ok:animate-bar-grow origin-left" style={{ width: `${pct}%`, "--bar-delay": `${i * 90}ms` } as CSSProperties} />
+                      <div className="m-reveal h-full rounded-sm bg-accent motion-ok:animate-grow-x" style={{ width: `${pct}%`, "--bar-delay": `${i * 120}ms` } as CSSProperties} />
                     </div>
                   </li>
                 ))}
