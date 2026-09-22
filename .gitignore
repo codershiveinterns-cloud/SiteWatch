@@ -47,3 +47,6 @@ next-env.d.ts
 # local sqlite database
 /prisma/*.db
 /prisma/*.db-journal
+
+# generated session signing secret
+/.session-secret

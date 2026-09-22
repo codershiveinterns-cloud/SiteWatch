@@ -12,8 +12,8 @@
     "db:migrate": "prisma migrate deploy",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
-    "vercel-build": "prisma migrate deploy && ALLOW_DEMO_SEED=true prisma db seed && next build",
-    "db:setup": "prisma migrate deploy && prisma db seed"
+    "vercel-build": "prisma migrate deploy && ALLOW_DEMO_SEED=true prisma db seed && node scripts/ensure-session-secret.mjs && next build",
+    "db:setup": "prisma migrate deploy && prisma db seed && node scripts/ensure-session-secret.mjs"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.10.0",

@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["better-sqlite3", "@prisma/adapter-better-sqlite3"],
   // Ship the migrated + seeded database file with every server function.
   outputFileTracingIncludes: {
-    "/**": ["./prisma/sitewatch.db"],
+    "/**": ["./prisma/sitewatch.db", "./.session-secret"],
   },
 };
 

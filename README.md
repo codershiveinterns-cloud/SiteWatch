@@ -69,6 +69,7 @@ See [.env.example](./.env.example).
 | --- | --- | --- |
 | `DATABASE_URL` | no | SQLite file URL, default `file:./prisma/sitewatch.db` |
 | `APP_URL` | yes | Public origin (`https://…` enables the `Secure` cookie flag) |
+| `SESSION_SECRET` | no | Signs session cookies; a `.session-secret` file is generated when unset |
 | `SESSION_TTL_DAYS` | no | Session lifetime, default 30 |
 | `ALLOW_DEMO_SEED` | no | `"true"` permits `prisma db seed`; never set on production |
 
@@ -79,6 +80,9 @@ See [.env.example](./.env.example).
 Import the GitHub repo into Vercel and deploy. Nothing else is required: `vercel.json`
 runs `npm run vercel-build`, which creates the SQLite file, applies migrations, seeds the demo
 organizations and builds. The database file ships inside the deployment.
+
+Session cookies are signed, so sign-in works across Vercel's separate serverless instances
+even though each holds its own copy of the database file.
 
 **Important:** Vercel's filesystem is temporary. Accounts and changes made on the deployed site
 persist only until the serverless instance is recycled (typically minutes to hours of

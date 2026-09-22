@@ -14,6 +14,8 @@ const envSchema = z.object({
     (v) => (blankToUndefined(v) === undefined ? 30 : Number(v)),
     z.number().int().min(1).max(365),
   ),
+  /** Optional; when absent a `.session-secret` file is used. */
+  SESSION_SECRET: z.preprocess(blankToUndefined, z.string().min(16).optional()),
   ALLOW_DEMO_SEED: z.preprocess(blankToUndefined, z.string().optional()).transform((v) => v === "true"),
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   VERCEL_URL: z.preprocess(blankToUndefined, z.string().optional()),
