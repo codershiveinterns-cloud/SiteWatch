@@ -5,8 +5,7 @@ import type { Permission } from "@/lib/rbac";
  *
  * Every top-level area of SiteWatch is declared here once. Navigation, route
  * guards, the dashboard and the "upcoming module" pages all read from this
- * list, so a module graduating from `planned` to `available` in a later
- * milestone is a one-line change.
+ * list, so enabling a module once it ships is a one-line change.
  */
 export type ModuleStatus = "available" | "planned";
 
@@ -33,10 +32,8 @@ export type ModuleDefinition = {
   /** Permission required to see and open the module. */
   permission: Permission;
   status: ModuleStatus;
-  /** Milestone that delivers the module (for planned modules). */
-  milestone?: 2 | 3 | 4 | 5;
   summary: string;
-  /** What the module will do once delivered; shown on the roadmap page. */
+  /** What the module includes; shown on its page until it is enabled. */
   capabilities: string[];
 };
 
@@ -48,7 +45,7 @@ export const MODULES: ModuleDefinition[] = [
     section: "Overview",
     permission: "dashboard:view",
     status: "available",
-    summary: "Organization context, foundation status and quick access to every module.",
+    summary: "Organization context, workspace status and quick access to every module.",
     capabilities: [],
   },
   {
@@ -58,7 +55,6 @@ export const MODULES: ModuleDefinition[] = [
     section: "Operations",
     permission: "sites:view",
     status: "planned",
-    milestone: 2,
     summary: "Registry of every remote site with category, GPS location and status.",
     capabilities: [
       "Create, edit and import sites with GPS coordinates",
@@ -74,7 +70,6 @@ export const MODULES: ModuleDefinition[] = [
     section: "Operations",
     permission: "assets:view",
     status: "planned",
-    milestone: 2,
     summary: "Asset registry with type, location, install date and live status.",
     capabilities: [
       "Register assets against sites with type and install date",
@@ -90,7 +85,6 @@ export const MODULES: ModuleDefinition[] = [
     section: "Operations",
     permission: "incidents:view",
     status: "planned",
-    milestone: 3,
     summary: "Alert-to-incident pipeline with priority, assignment and SLA-timed resolution.",
     capabilities: [
       "Auto-created from alerts with priority and linked asset",
@@ -106,7 +100,6 @@ export const MODULES: ModuleDefinition[] = [
     section: "Operations",
     permission: "technicians:view",
     status: "planned",
-    milestone: 3,
     summary: "Technician roster, skills, availability and dispatch.",
     capabilities: [
       "Skills, home location and availability per technician",
@@ -121,7 +114,6 @@ export const MODULES: ModuleDefinition[] = [
     section: "Monitoring",
     permission: "alerts:view",
     status: "planned",
-    milestone: 3,
     summary: "Threshold and anomaly rules that raise alerts from incoming telemetry.",
     capabilities: [
       "Threshold rules per asset type and metric",
@@ -137,7 +129,6 @@ export const MODULES: ModuleDefinition[] = [
     section: "Monitoring",
     permission: "telemetry:view",
     status: "planned",
-    milestone: 2,
     summary: "Ingestion endpoints for sensor feeds and third-party monitoring data.",
     capabilities: [
       "Authenticated webhook and API ingestion per tenant",
@@ -152,7 +143,6 @@ export const MODULES: ModuleDefinition[] = [
     section: "Insights",
     permission: "analytics:view",
     status: "planned",
-    milestone: 4,
     summary: "Uptime, mean time to resolve, alert trends and technician performance.",
     capabilities: [
       "Uptime and MTTR per site and asset class",
@@ -168,7 +158,6 @@ export const MODULES: ModuleDefinition[] = [
     section: "Insights",
     permission: "reports:view",
     status: "planned",
-    milestone: 5,
     summary: "Exportable incident and asset reports in CSV and PDF.",
     capabilities: ["Incident and asset exports", "Scheduled report delivery", "Per-tenant branding on PDF output"],
   },
@@ -204,9 +193,3 @@ export function moduleByHref(pathname: string): ModuleDefinition | undefined {
   return MODULES.find((m) => pathname === m.href || pathname.startsWith(`${m.href}/`));
 }
 
-export const MILESTONE_META: Record<2 | 3 | 4 | 5, { title: string; window: string }> = {
-  2: { title: "Registry & ingestion", window: "Days 2–4" },
-  3: { title: "Alerts, incidents & dispatch", window: "Days 5–8" },
-  4: { title: "Map, analytics & AI", window: "Days 9–12" },
-  5: { title: "Hardening, exports & go-live", window: "Days 13–15" },
-};

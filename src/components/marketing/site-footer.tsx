@@ -63,7 +63,7 @@ export function SiteFooter() {
         <div className="mt-10 flex flex-col gap-3 border-t border-line pt-6 text-xs text-ink-3 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 SiteWatch</p>
           <p className="inline-flex items-center gap-2 font-mono">
-            <StatusDot tone="healthy" /> Platform foundation · Milestone 1
+            <StatusDot tone="healthy" /> All systems operational
           </p>
         </div>
       </div>

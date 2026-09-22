@@ -26,7 +26,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
       organization={{ id: ctx.organization.id, name: ctx.organization.name, slug: ctx.organization.slug }}
       role={ctx.role}
       nav={nav}
-      environment={process.env.NODE_ENV === "production" ? "staging" : "development"}
+      environment={process.env.NODE_ENV === "production" ? "live" : "development"}
       version={pkg.version}
       initialCollapsed={initialCollapsed}
     >

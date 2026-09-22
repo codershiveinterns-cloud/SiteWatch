@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { requirePermission } from "@/lib/auth/guards";
-import { MILESTONE_META, MODULES } from "@/lib/modules";
+import { MODULES } from "@/lib/modules";
 import { NAV_ICONS } from "@/components/shell/nav-icons";
 import { PageHeader } from "@/components/shell/page-header";
 import { Panel, PanelBody, PanelHeader } from "@/components/ui/panel";
@@ -12,7 +12,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Button } from "@/components/ui/button";
 
 /**
- * Roadmap page for modules that ship in later milestones. Access is still
+ * Page for modules that are not yet enabled. Access is still
  * permission-checked so the page only exists for roles that will use it.
  */
 function findPlanned(key: string) {
@@ -28,11 +28,10 @@ export async function generateMetadata({ params }: PageProps<"/[module]">): Prom
 export default async function PlannedModulePage({ params }: PageProps<"/[module]">) {
   const { module } = await params;
   const def = findPlanned(module);
-  if (!def || !def.milestone) notFound();
+  if (!def) notFound();
 
   await requirePermission(def.permission, def.href);
   const Icon = NAV_ICONS[def.key];
-  const milestone = MILESTONE_META[def.milestone];
 
   return (
     <>
@@ -42,7 +41,7 @@ export default async function PlannedModulePage({ params }: PageProps<"/[module]
         description={def.summary}
         actions={
           <Badge tone="atrisk" className="h-6 px-2">
-            Planned · Milestone {def.milestone}
+            Coming soon
           </Badge>
         }
       />
@@ -53,7 +52,7 @@ export default async function PlannedModulePage({ params }: PageProps<"/[module]
             <EmptyState
               icon={<Icon className="size-4" aria-hidden />}
               title={`${def.title} is not available yet`}
-              description={`This module is scheduled for Milestone ${def.milestone} (${milestone.title}, ${milestone.window}). The navigation entry, permissions and tenant scoping for it are already in place.`}
+              description="This module is not enabled for your workspace yet. Its navigation entry, permissions and tenant scoping are already in place, so it will appear here as soon as it is switched on."
               action={
                 <Button asChild variant="secondary" size="sm">
                   <Link href="/dashboard">
@@ -66,7 +65,7 @@ export default async function PlannedModulePage({ params }: PageProps<"/[module]
         </Panel>
 
         <Panel>
-          <PanelHeader title="Scope" description={`Delivered in Milestone ${def.milestone}`} />
+          <PanelHeader title="What it includes" />
           <PanelBody>
             <ul className="space-y-2.5">
               {def.capabilities.map((c) => (

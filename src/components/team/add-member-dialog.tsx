@@ -53,7 +53,7 @@ export function AddMemberDialog() {
         description={
           created
             ? "Share the temporary password securely. It is shown once; the member can change it under Settings → Security."
-            : "Creates an account in this organization. Email invitations arrive with the notification engine in Milestone 4."
+            : "Creates an account in this organization and generates a temporary password to share with the member."
         }
       >
         {created ? (

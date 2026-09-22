@@ -35,7 +35,7 @@ export function MapSection() {
             index="05"
             eyebrow="Operational visibility"
             title={<span id="map-title">See the operational picture at a glance.</span>}
-            lede="The map is the primary screen for operations managers: every site colour-coded by status, filterable, with drill-down to the asset and the incident behind it. Planned for Milestone 4, shown here as a product visualization."
+            lede="The map is the primary screen for operations managers: every site colour-coded by status, filterable, with drill-down to the asset and the incident behind it."
           />
         </Reveal>
 

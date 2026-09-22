@@ -6,7 +6,7 @@ import { requirePermission } from "@/lib/auth/guards";
 import { db } from "@/lib/db";
 import { tenantDb } from "@/lib/tenant";
 import { hasPermission, permissionsForRole, ROLE_META } from "@/lib/rbac";
-import { MILESTONE_META, MODULES } from "@/lib/modules";
+import { MODULES } from "@/lib/modules";
 import { formatDate, formatDateTime, relativeTime } from "@/lib/utils";
 import { PageHeader } from "@/components/shell/page-header";
 import { Panel, PanelBody, PanelHeader, DescriptionList } from "@/components/ui/panel";
@@ -14,7 +14,7 @@ import { Badge, RoleBadge } from "@/components/ui/badge";
 import { StatusIndicator } from "@/components/ui/status-indicator";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Button } from "@/components/ui/button";
-import { FoundationChecklist } from "@/components/dashboard/foundation-checklist";
+import { WorkspaceChecklist } from "@/components/dashboard/workspace-checklist";
 import pkg from "../../../../package.json";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -152,7 +152,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
               label="Build"
               value={
                 <span className="font-mono text-xs text-ink-2">
-                  v{pkg.version} · {process.env.NODE_ENV === "production" ? "staging" : "development"}
+                  v{pkg.version} · {process.env.NODE_ENV === "production" ? "live" : "development"}
                 </span>
               }
             />
@@ -163,12 +163,12 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <Panel className="lg:col-span-2">
           <PanelHeader
-            title="Milestone 1 · Foundation"
-            description="What is in place today and what each upcoming milestone delivers"
-            actions={<Badge tone="healthy">Delivered</Badge>}
+            title="Workspace status"
+            description="Platform services active for this organization"
+            actions={<Badge tone="healthy">Active</Badge>}
           />
           <PanelBody>
-            <FoundationChecklist />
+            <WorkspaceChecklist />
           </PanelBody>
         </Panel>
 
@@ -199,7 +199,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
               <h2 id="ops-heading" className="text-md font-semibold text-ink">
                 Operations
               </h2>
-              <p className="text-xs text-ink-3">Registries and workflows arrive in the next milestones. Nothing here is simulated.</p>
+              <p className="text-xs text-ink-3">Sites, assets and incidents for {ctx.organization.name}.</p>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
@@ -208,9 +208,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
                 <PanelHeader
                   title={module.title}
                   actions={
-                    <Badge tone="outline" mono>
-                      M{module.milestone}
-                    </Badge>
+                    <Badge tone="outline">Soon</Badge>
                   }
                 />
                 <PanelBody className="py-3">
@@ -218,11 +216,11 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
                     compact
                     icon={<Icon className="size-4" aria-hidden />}
                     title={empty}
-                    description={`${module.title} arrive with Milestone ${module.milestone}: ${MILESTONE_META[module.milestone!].title.toLowerCase()}.`}
+                    description={`${module.title} will appear here once the module is enabled for your workspace.`}
                     action={
                       <Button asChild variant="ghost" size="sm">
                         <Link href={module.href}>
-                          What is planned <ArrowRight className="size-3.5" aria-hidden />
+                          Learn more <ArrowRight className="size-3.5" aria-hidden />
                         </Link>
                       </Button>
                     }
@@ -237,7 +235,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
       {plannedModules.length > 0 ? (
         <section className="mt-6" aria-labelledby="roadmap-heading">
           <h2 id="roadmap-heading" className="mb-3 text-md font-semibold text-ink">
-            Coming next for your role
+            More for your role
           </h2>
           <ul className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
             {plannedModules.map((m) => (
@@ -248,7 +246,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-sm font-medium text-ink">{m.title}</span>
-                    <span className="font-mono text-2xs text-ink-3">M{m.milestone}</span>
+                    <span className="font-mono text-2xs text-ink-3">Soon</span>
                   </div>
                   <p className="mt-1 text-xs leading-relaxed text-ink-3">{m.summary}</p>
                 </Link>

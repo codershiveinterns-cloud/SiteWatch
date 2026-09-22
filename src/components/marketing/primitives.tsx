@@ -34,12 +34,12 @@ export function Meta({ children, className }: { children: React.ReactNode; class
   return <span className={cn("font-mono text-2xs uppercase tracking-wider text-ink-3", className)}>{children}</span>;
 }
 
-/** Marks a visual as illustrative demo content. */
+/** Labels a product visual as coming from the demo workspace. */
 export function DemoTag({ className }: { className?: string }) {
   return (
     <span className={cn("inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border border-line bg-surface/80 px-1.5 py-0.5 font-mono text-2xs uppercase tracking-wider text-ink-3", className)}>
       <span aria-hidden className="size-1.5 rounded-full bg-atrisk" />
-      Illustrative data
+      Demo workspace
     </span>
   );
 }

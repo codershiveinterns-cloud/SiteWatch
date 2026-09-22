@@ -143,7 +143,7 @@ export function HeroVisual({ className }: { className?: string }) {
               <span className="text-xs font-semibold text-ink">Asset health</span>
               <Meta>41 assets</Meta>
             </div>
-            <div className="flex h-2 overflow-hidden rounded-sm bg-sunken" role="img" aria-label="Illustrative asset health: mostly healthy, a few at risk, one critical">
+            <div className="flex h-2 overflow-hidden rounded-sm bg-sunken" role="img" aria-label="Asset health: mostly healthy, a few at risk, one critical">
               <span className="w-[82%] bg-healthy" />
               <span className="w-[13%] bg-atrisk" />
               <span className="w-[5%] bg-critical" />

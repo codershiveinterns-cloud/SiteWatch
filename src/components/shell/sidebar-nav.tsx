@@ -54,11 +54,8 @@ export function SidebarNav({
                     <>
                       <span className="truncate">{item.title}</span>
                       {planned ? (
-                        <span
-                          className="ml-auto rounded-sm border border-line px-1 font-mono text-2xs leading-4 text-ink-3"
-                          aria-label={`Planned for milestone ${item.milestone}`}
-                        >
-                          M{item.milestone}
+                        <span className="ml-auto rounded-sm border border-line px-1 font-mono text-2xs leading-4 text-ink-3" aria-label="Coming soon">
+                          Soon
                         </span>
                       ) : null}
                     </>
@@ -70,7 +67,7 @@ export function SidebarNav({
               return (
                 <li key={item.key}>
                   {collapsed ? (
-                    <Tooltip content={planned ? `${item.title} · Milestone ${item.milestone}` : item.title}>{link}</Tooltip>
+                    <Tooltip content={planned ? `${item.title} · Coming soon` : item.title}>{link}</Tooltip>
                   ) : (
                     link
                   )}

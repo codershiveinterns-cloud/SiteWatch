@@ -26,7 +26,7 @@ export function Analytics() {
             index="07"
             eyebrow="Operational analytics"
             title={<span id="an-title">Understand how the operation actually performs.</span>}
-            lede="Uptime, mean time to resolve, alert volume and technician performance, cut by site, asset class and period. Planned for Milestone 4; the visuals below show the intended experience with illustrative figures."
+            lede="Uptime, mean time to resolve, alert volume and technician performance, cut by site, asset class and period."
           />
         </Reveal>
 
@@ -47,7 +47,7 @@ export function Analytics() {
             <div className="bg-surface p-4">
               <Meta>Alert volume</Meta>
               <p className="mt-1 text-xl font-semibold text-ink tabular">107</p>
-              <div className="mt-2 flex h-12 items-end gap-1" role="img" aria-label="Illustrative weekly alert counts">
+              <div className="mt-2 flex h-12 items-end gap-1" role="img" aria-label="Weekly alert counts">
                 {ALERTS.map((v, i) => (
                   <span
                     key={i}
