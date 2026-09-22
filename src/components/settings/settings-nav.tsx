@@ -2,21 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Building2, ShieldCheck, UserRound } from "lucide-react";
+import { Building2, Plug, ShieldCheck, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const ITEMS = [
   { href: "/settings", label: "Account", icon: UserRound },
   { href: "/settings/organization", label: "Organization", icon: Building2 },
   { href: "/settings/security", label: "Security", icon: ShieldCheck },
+  { href: "/settings/integrations", label: "Integrations", icon: Plug, permission: "telemetry:manage" },
 ] as const;
 
-export function SettingsNav() {
+export function SettingsNav({ permissions }: { permissions: string[] }) {
   const pathname = usePathname();
   return (
     <nav aria-label="Settings sections" className="-mx-1 overflow-x-auto lg:mx-0">
       <ul className="flex gap-1 px-1 lg:flex-col lg:px-0">
-        {ITEMS.map(({ href, label, icon: Icon }) => {
+        {ITEMS.filter((i) => !("permission" in i) || permissions.includes(i.permission)).map(({ href, label, icon: Icon }) => {
           const active = pathname === href;
           return (
             <li key={href} className="shrink-0">

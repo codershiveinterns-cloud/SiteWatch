@@ -41,6 +41,11 @@ model Organization {
 
   memberships Membership[]
   sessions    Session[]
+  sites       Site[]
+  assets      Asset[]
+  ingestKeys  IngestKey[]
+  telemetry   TelemetryEvent[]
+  rejected    RejectedEvent[]
 
   @@index([createdAt])
 }
@@ -93,4 +98,135 @@ model Session {
 
   @@index([userId])
   @@index([expiresAt])
+}
+
+// ---------------------------------------------------------------------------
+// Milestone 2 — Site & asset registry, telemetry ingestion
+// ---------------------------------------------------------------------------
+
+enum SiteCategory {
+  SOLAR_FARM
+  TELECOM_TOWER
+  EV_STATION
+  WAREHOUSE
+  CONSTRUCTION_SITE
+}
+
+enum AssetStatus {
+  HEALTHY
+  AT_RISK
+  CRITICAL
+  OFFLINE
+  UNKNOWN
+}
+
+enum Criticality {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Site {
+  id             String       @id @default(cuid())
+  organizationId String
+  /// Short human code, unique per organization (e.g. "NW-SOL-01").
+  code           String
+  name           String
+  category       SiteCategory
+  latitude       Float
+  longitude      Float
+  address        String?
+  timezone       String?
+  description    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  assets       Asset[]
+
+  @@unique([organizationId, code])
+  @@index([organizationId, category])
+  @@index([organizationId, name])
+}
+
+model Asset {
+  id             String      @id @default(cuid())
+  organizationId String
+  siteId         String
+  /// Asset tag, unique per organization (e.g. "INV-2"). Used by telemetry payloads.
+  tag            String
+  name           String
+  type           String
+  manufacturer   String?
+  model          String?
+  serialNumber   String?
+  installDate    DateTime?
+  status         AssetStatus @default(UNKNOWN)
+  criticality    Criticality @default(MEDIUM)
+  /// JSON object of free-form specifications (SQLite has no JSON column type).
+  specifications String?
+  maintenanceIntervalDays Int?
+  lastMaintenanceAt       DateTime?
+  nextMaintenanceAt       DateTime?
+  lastTelemetryAt         DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  site         Site             @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  telemetry    TelemetryEvent[]
+
+  @@unique([organizationId, tag])
+  @@index([organizationId, siteId])
+  @@index([organizationId, status])
+  @@index([organizationId, nextMaintenanceAt])
+}
+
+/// API key for the telemetry ingestion endpoint. Only the hash is stored.
+model IngestKey {
+  id             String    @id @default(cuid())
+  organizationId String
+  name           String
+  keyPrefix      String
+  keyHash        String    @unique
+  createdById    String?
+  createdAt      DateTime  @default(now())
+  lastUsedAt     DateTime?
+  revokedAt      DateTime?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+}
+
+model TelemetryEvent {
+  id             String   @id @default(cuid())
+  organizationId String
+  assetId        String
+  metric         String
+  value          Float
+  unit           String?
+  recordedAt     DateTime
+  receivedAt     DateTime @default(now())
+  source         String?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  asset        Asset        @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@index([assetId, metric, recordedAt])
+  @@index([organizationId, receivedAt])
+}
+
+/// Payloads rejected by the ingestion endpoint, kept for troubleshooting.
+model RejectedEvent {
+  id             String   @id @default(cuid())
+  organizationId String?
+  ingestKeyId    String?
+  reason         String
+  payload        String
+  receivedAt     DateTime @default(now())
+
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, receivedAt])
 }

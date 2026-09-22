@@ -10,6 +10,7 @@ import bcrypt from "bcryptjs";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { Role } from "../src/generated/prisma/enums";
+import { DEMO_INGEST_KEYS, seedRegistry } from "./seed-registry";
 
 if (process.env.ALLOW_DEMO_SEED !== "true") {
   console.error("Refusing to seed: set ALLOW_DEMO_SEED=\"true\" for development/staging environments only.");
@@ -65,10 +66,12 @@ async function main() {
         create: { userId: user.id, organizationId: organization.id, role: u.role },
       });
     }
-    console.log(`✓ ${org.name} — ${org.users.length} member(s)`);
+    const registry = await seedRegistry(db, organization.id, org.slug);
+    console.log(`✓ ${org.name} — ${org.users.length} member(s), ${registry.sites} sites, ${registry.assets} assets, ${registry.events} telemetry events`);
   }
 
   console.log(`\nDemo password for every account: ${DEMO_PASSWORD}`);
+  console.log(`Demo ingest key (Northwind): ${DEMO_INGEST_KEYS["northwind-demo"]}`);
 }
 
 main()

@@ -54,7 +54,7 @@ export const MODULES: ModuleDefinition[] = [
     href: "/sites",
     section: "Operations",
     permission: "sites:view",
-    status: "planned",
+    status: "available",
     summary: "Registry of every remote site with category, GPS location and status.",
     capabilities: [
       "Create, edit and import sites with GPS coordinates",
@@ -69,7 +69,7 @@ export const MODULES: ModuleDefinition[] = [
     href: "/assets",
     section: "Operations",
     permission: "assets:view",
-    status: "planned",
+    status: "available",
     summary: "Asset registry with type, location, install date and live status.",
     capabilities: [
       "Register assets against sites with type and install date",
@@ -128,8 +128,8 @@ export const MODULES: ModuleDefinition[] = [
     href: "/telemetry",
     section: "Monitoring",
     permission: "telemetry:view",
-    status: "planned",
-    summary: "Ingestion endpoints for sensor feeds and third-party monitoring data.",
+    status: "available",
+    summary: "Live event stream from sensor feeds and third-party monitoring data.",
     capabilities: [
       "Authenticated webhook and API ingestion per tenant",
       "Payload validation with rejected-event logging",

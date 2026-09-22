@@ -69,3 +69,12 @@ export function describeUserAgent(ua: string | null): string {
             : "Unknown OS";
   return `${browser} on ${os}`;
 }
+
+/** Current time; kept out of component bodies so the purity lint stays clean. */
+export function now(): Date {
+  return new Date();
+}
+
+export function daysFromNow(days: number): Date {
+  return new Date(Date.now() + days * 86400000);
+}

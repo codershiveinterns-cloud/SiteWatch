@@ -73,11 +73,27 @@ permission, status (`available` | `planned`) and delivering milestone. Navigatio
 dashboard and the `/[module]` roadmap pages read from it. Graduating a module in a later
 milestone means flipping its status and adding its real route.
 
-## 6. Extending in later milestones
+## 6. Registry and ingestion (Milestone 2)
+
+* `Site` and `Asset` carry `organizationId`; codes and tags are unique per organization so
+  telemetry payloads can reference assets by tag without exposing ids.
+* Asset master data: type (free text with per-category suggestions), manufacturer, model,
+  serial, install date (never in the future), JSON specifications (stored as text because
+  SQLite has no JSON column), maintenance interval and derived next-due date.
+* Status roll-up: a site's status is the worst status among its assets
+  (`rollupStatus` in `src/lib/domain.ts`).
+* Ingestion: `POST /api/ingest/telemetry` authenticates with a per-tenant `IngestKey`
+  (only the SHA-256 hash is stored, keys are shown once). Events are validated with Zod;
+  bad events are written to `RejectedEvent` and never block the rest of the batch.
+  Accepted events update `Asset.lastTelemetryAt`. Milestone 3's alert engine hooks into
+  the same code path after `createMany`.
+* All queries go through `tenantDb(organizationId)` in `src/lib/tenant.ts`.
+
+## 7. Extending in later milestones
 
 | Milestone | Schema additions | Notes |
 | --- | --- | --- |
-| 2 | `Site`, `Asset`, `AssetCategory`, `TelemetryEvent`, `IngestKey` | all with `organizationId`; ingestion keys are per-tenant |
+| 2 (done) | `Site`, `Asset`, `TelemetryEvent`, `IngestKey`, `RejectedEvent` | all with `organizationId`; ingestion keys are per-tenant |
 | 3 | `AlertRule`, `Alert`, `Incident`, `Assignment`, `SlaPolicy`, `Notification`, `TechnicianProfile` | SLA timers anchored on `Incident.createdAt`; SLA policy per tenant with defaults |
 | 4 | `AuditLog`, `Recommendation` | AI outputs stored as recommendations for Ops Manager approval |
 | 5 | — | hardening, exports, production cutover |

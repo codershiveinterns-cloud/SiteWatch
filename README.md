@@ -3,10 +3,11 @@
 Multi-tenant remote asset monitoring platform for companies operating distributed sites
 (solar farms, telecom towers, EV charging, warehouses, construction sites).
 
-**Current status: Milestone 1 — foundation.** Authentication, role-based access control,
-tenant isolation, the application shell and a staging-ready build are in place. Operational
-modules (sites, assets, telemetry, alerts, incidents, dispatch, analytics, reports) arrive in
-Milestones 2–5 and are represented in the UI as clearly labelled upcoming modules.
+**Current status: Milestone 2 — registry & ingestion.** On top of the Milestone 1 foundation
+(auth, RBAC, tenancy, shell) the platform now has a site registry, an asset registry with master
+data and maintenance schedules, CSV import, a telemetry ingestion API with per-tenant keys, and a
+live operational dashboard. Alerts, incidents, dispatch, map, analytics and reports arrive in
+Milestones 3–5 and are shown in the UI as "Soon".
 
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for the technical design.
 
@@ -47,6 +48,23 @@ Password for all: `SiteWatch-Demo1`
 | Northwind Renewables (Demo) | tech@northwind.demo | Field Technician |
 | Northwind Renewables (Demo) | viewer@northwind.demo | Viewer |
 | Meridian Telecom (Demo) | admin@meridian.demo | Admin (separate tenant, for isolation checks) |
+
+## Telemetry ingestion API
+
+```
+POST /api/ingest/telemetry
+Authorization: Bearer <ingest key>        # Settings → Integrations
+Content-Type: application/json
+
+{ "events": [ { "asset_tag": "INV-2", "metric": "power_kw", "value": 96.4,
+                "unit": "kW", "recorded_at": "2026-09-22T09:14:02Z" } ] }
+```
+
+Responses: `202` accepted (per-event rejections listed), `422` nothing accepted, `401` bad key,
+`400` invalid JSON. Unknown asset tags, future timestamps and malformed events are rejected
+individually and logged under Telemetry → Rejected payloads. Up to 500 events per request.
+
+Demo ingest key for the Northwind organization (seeded): `sw_ingest_northwind_demo_key_000000000001`
 
 ## Scripts
 

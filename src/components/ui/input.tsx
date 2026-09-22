@@ -1,8 +1,10 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-export const inputClass =
-  "block w-full h-10 sm:h-9 rounded-md border border-line-strong/80 bg-surface px-3 text-base sm:text-sm text-ink shadow-sm transition-[border-color,box-shadow] duration-150 placeholder:text-ink-3 hover:border-line-strong focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25 disabled:bg-sunken disabled:text-ink-3 aria-invalid:border-critical aria-invalid:focus:ring-critical/25";
+export const inputBase =
+  "block h-10 sm:h-9 rounded-md border border-line-strong/80 bg-surface px-3 text-base sm:text-sm text-ink shadow-sm transition-[border-color,box-shadow] duration-150 placeholder:text-ink-3 hover:border-line-strong focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25 disabled:bg-sunken disabled:text-ink-3 aria-invalid:border-critical aria-invalid:focus:ring-critical/25";
+
+export const inputClass = `${inputBase} w-full`;
 
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   function Input({ className, ...props }, ref) {
