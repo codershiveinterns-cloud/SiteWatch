@@ -576,3 +576,10 @@
     border-color: var(--sw-border-strong);
   }
 }
+
+/* Landing page reads best slightly larger on wide desktops; matches ~110% browser zoom. */
+@media (width >= 80rem) {
+  .landing-zoom {
+    zoom: 1.1;
+  }
+}

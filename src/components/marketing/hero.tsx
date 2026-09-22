@@ -49,7 +49,7 @@ export function Hero({ signedIn }: { signedIn: boolean }) {
             </dl>
           </div>
 
-          <HeroVisual className="min-w-0 lg:-mr-8 xl:-mr-16" />
+          <HeroVisual className="min-w-0" />
         </div>
       </div>
     </section>
