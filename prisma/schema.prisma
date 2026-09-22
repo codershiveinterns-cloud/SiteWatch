@@ -1,0 +1,96 @@
+// SiteWatch — Milestone 1 schema
+//
+// Tenancy model
+// -------------
+// Organization is the tenant boundary. Every organization-owned resource
+// introduced in later milestones (Site, Asset, Incident, Alert, TelemetryEvent,
+// AuditLog, ...) MUST carry an `organizationId` foreign key and be queried
+// through the tenant-scoped helpers in `src/lib/tenant.ts`.
+//
+// Users are global identities (unique by email). A user joins an organization
+// through a Membership, which carries the user's Role inside that tenant.
+// This keeps the door open for a single user belonging to several tenants
+// (e.g. a contractor technician) without a schema change.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  OPERATIONS_MANAGER
+  FIELD_TECHNICIAN
+  VIEWER
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  /// URL-safe identifier, unique across the platform (used for tenant context,
+  /// future subdomains and API namespacing).
+  slug      String   @unique
+  /// IANA timezone used for SLA timers and reporting in later milestones.
+  timezone  String   @default("UTC")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships Membership[]
+  sessions    Session[]
+
+  @@index([createdAt])
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  memberships Membership[]
+  sessions    Session[]
+}
+
+model Membership {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String
+  role           Role     @default(VIEWER)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([organizationId, role])
+}
+
+/// Server-side session. The browser only holds an opaque random token; the
+/// database stores its SHA-256 hash, so a leaked database row cannot be used
+/// to hijack a session.
+model Session {
+  id             String   @id @default(cuid())
+  tokenHash      String   @unique
+  userId         String
+  /// The tenant this session is currently acting in. Set at sign-in from the
+  /// user's membership; future org-switching updates this field only.
+  organizationId String
+  userAgent      String?
+  ipAddress      String?
+  createdAt      DateTime @default(now())
+  lastActiveAt   DateTime @default(now())
+  expiresAt      DateTime
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
