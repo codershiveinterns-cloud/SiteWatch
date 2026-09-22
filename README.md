@@ -89,11 +89,21 @@ Node, or Docker). Steps:
 On Vercel: import the repo, add the environment variables, and set the build command to
 `npx prisma migrate deploy && next build`. The `postinstall` script generates the Prisma client.
 
+## Routes
+
+| Route | Access | Purpose |
+| --- | --- | --- |
+| `/` | public | Marketing landing page (shows "Open console" when signed in) |
+| `/login`, `/signup` | public | Authentication (signed-in users are sent to the dashboard) |
+| `/dashboard`, `/team`, `/settings/*`, module routes | authenticated | Application shell, permission-checked per page |
+| `/api/health` | public | Health check |
+
 ## Project layout
 
 ```
 prisma/               schema, migrations, demo seed
 src/app/              routes (App Router)
+  (marketing)/        public landing page
   (auth)/             login, signup — public
   (app)/              authenticated shell: dashboard, [module], team, settings, forbidden
   api/health          staging health check
@@ -104,5 +114,6 @@ src/lib/tenant.ts     tenant-scoped data access
 src/lib/modules.ts    product module registry (drives navigation + roadmap pages)
 src/components/ui/    design-system primitives
 src/components/shell/ sidebar, top bar, account menu, mobile drawer
+src/components/marketing/ landing page sections and product visualizations
 src/proxy.ts          optimistic auth routing (cookie presence)
 ```

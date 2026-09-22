@@ -1,11 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 const SESSION_COOKIE = "sw_session";
-const PUBLIC_PATHS = new Set(["/login", "/signup"]);
+const PUBLIC_PATHS = new Set(["/", "/login", "/signup"]);
+const AUTH_PATHS = new Set(["/login", "/signup"]);
 
 /**
  * Optimistic routing layer only. It keeps unauthenticated visitors out of the
  * app shell and signed-in users off the auth pages based on cookie presence.
+ * The landing page (`/`) is public for everyone.
  * Real authentication and authorization happen server-side in
  * `src/lib/auth/guards.ts`, which validates the session against the database
  * on every request.
@@ -19,11 +21,11 @@ export function proxy(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.search = "";
-    if (pathname !== "/") url.searchParams.set("next", `${pathname}${search}`);
+    url.searchParams.set("next", `${pathname}${search}`);
     return NextResponse.redirect(url);
   }
 
-  if (hasSessionCookie && (isPublic || pathname === "/")) {
+  if (hasSessionCookie && AUTH_PATHS.has(pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     url.search = "";

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@custom-variant motion-ok (@media (prefers-reduced-motion: no-preference));
 
 /* ------------------------------------------------------------------------
    SiteWatch design tokens
@@ -56,7 +57,7 @@
   --sw-grid: rgba(20, 23, 28, 0.045);
 }
 
-:root[data-theme="dark"] {
+[data-theme="dark"] {
   color-scheme: dark;
 
   --sw-canvas: #0e1116;
@@ -329,4 +330,107 @@
   background: linear-gradient(90deg, var(--sw-sunken) 0%, var(--sw-surface-2) 40%, var(--sw-sunken) 80%);
   background-size: 800px 100%;
   animation: sw-shimmer 1.4s linear infinite;
+}
+
+/* ------------------------------------------------------------------------
+   Marketing / landing page
+   --------------------------------------------------------------------- */
+@utility container-m {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1200px;
+  padding-inline: 1.25rem;
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Scroll reveal: elements start hidden and transition in when observed. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 600ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal="visible"] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@keyframes sw-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sw-draw {
+  from {
+    stroke-dashoffset: var(--draw-length, 600);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes sw-marker-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes sw-bar-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes sw-ticker {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@utility animate-rise {
+  animation: sw-rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--rise-delay, 0ms);
+}
+@utility animate-draw {
+  stroke-dasharray: var(--draw-length, 600);
+  animation: sw-draw 1800ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: var(--draw-delay, 300ms);
+}
+@utility animate-marker-in {
+  animation: sw-marker-in 500ms cubic-bezier(0.2, 0.8, 0.2, 1.2) both;
+  animation-delay: var(--marker-delay, 0ms);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+@utility animate-bar-grow {
+  animation: sw-bar-grow 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--bar-delay, 0ms);
+  transform-origin: bottom;
+}
+@utility animate-ticker {
+  animation: sw-ticker 2.4s ease-in-out infinite;
 }
